@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction Result</title>
+    <style>
+        /* Basic reset for margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            padding: 8px;
+            font-size: 1em;
+            border-bottom: 1px solid #ddd;
+            color: #444;
+        }
+
+        ul li:last-child {
+            border-bottom: none;
+        }
+
+        .result {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .approved {
+            color: green;
+        }
+
+        .rejected {
+            color:  #007BFF;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: hsl(12, 100%, 50%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Approval Prediction Result</h1>
+        <h3>Provided Information For Loan Approval Prediction</h3>
+
+        <ul>
+            <li>Number of Dependents: {{ no_of_dependents }} Members</li>
+            <li>Education Level: {{ education }}</li>
+            <li>Self Employed: {{ self_employed }}</li>
+            <li>Annual Income: {{ income_annum }} RS</li>
+            <li>Loan Amount: {{ loan_amount }} RS</li>
+            <li>Loan Term: {{ loan_term }} Months</li>
+            <li>CIBIL Score: {{ cibil_score }}</li>
+            <li>Residential Assets Value: {{ residential_assets_value }} RS</li>
+            <li>Commercial Assets Value: {{ commercial_assets_value }} RS</li>
+            <li>Luxury Assets Value: {{ luxury_assets_value }} RS</li>
+            <li>Bank Asset Value: {{ bank_asset_value }} RS</li>
+        </ul>
+        <p class="result">The predicted result is: 
+            <strong class="{{ 'approved' if result == 'approved' else 'rejected' }}">{{ result }}</strong>
+        </p>
+       
+        <!-- Print Button -->
+        <button onclick="printResult()">Print Result</button>
+       
+        <a href="{{ url_for('predict') }}" class="button">← Back to Prediction</a>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Loan Approval Prediction Application. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Printing -->
+    <script>
+        function printResult() {
+            var printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Loan Approval Result</title></head><body>');
+            printWindow.document.write('<h1>Loan Approval Prediction Result</h1>');
+            
+            // Get dynamic data from the page
+            const result = document.querySelector('strong').innerText;
+            
+            printWindow.document.write('<p>The predicted result is: <strong class="' + (result.toLowerCase() === 'approved' ? 'approved' : 'rejected') + '">' + result + '</strong></p>');
+
+            // Print the user information
+            printWindow.document.write('<h5>Provided Information For Loan Approval Prediction</h5>');
+            var infoList = document.querySelectorAll('ul li');
+            printWindow.document.write('<ul>');
+            infoList.forEach(function (item) {
+                printWindow.document.write('<li>' + item.innerHTML + '</li>');
+            });
+            printWindow.document.write('</ul>');
+
+            printWindow.document.write('<footer><p>&copy; 2025 Loan Approval Prediction Application. All rights reserved.</p></footer>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+
+</body>
+</html>

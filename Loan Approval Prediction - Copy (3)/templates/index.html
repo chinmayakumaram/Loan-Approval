@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction</title>
+    <style>
+        /* Global styles reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Logo Style */
+        .logo {
+            width: 60px;
+            height: 40px;
+            border-radius: 20px;
+        }
+
+        /* Updated Fixed NavBar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(51, 51, 51, 0.8);
+            padding: 1rem 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 999;
+        }
+
+        nav ul {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav ul li {
+            list-style: none;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 17px;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, border-radius 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: rgb(89, 60, 234);
+            border-radius: 5px;
+        }
+
+        /* Container setup */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            padding-top: 100px; /* Space for fixed nav */
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Overlay */
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #619deb;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 50px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #baddf0;
+            transform: translateY(-3px);
+        }
+
+        .cta-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 4rem 0;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #0a3d62;
+        }
+
+        .services p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .services ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 0;
+        }
+
+        .services ul li {
+            background: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .services ul li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .services ul li span {
+            display: block;
+            font-weight: 500;
+            margin-top: 10px;
+            color: #555;
+        }
+/* Basic Service Item Styling */
+.service-item {
+    position: relative;
+    margin: 20px 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-item a {
+    display: block;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+}
+
+.service-item a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation for Click */
+.service-item:active {
+    animation: clickAnimation 0.3s ease;
+}
+
+/* Keyframes for the Click Animation */
+@keyframes clickAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+        /* About Us Section */
+        .about {
+            background-color: #ecf0f1;
+            padding: 4rem 0;
+        }
+
+        .about h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #0a3d62;
+        }
+
+        .about p {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 4rem 0;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            color: #0a3d62;
+            margin-bottom: 1rem;
+        }
+
+        .contact p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a3d62;
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 1rem;
+            color: #aaa;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                font-size: 1.1rem;
+                padding: 12px 25px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .services ul {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Floating Button */
+        .chatbot-btn {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background: #0072ff;
+          color: white;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 28px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        /* Chat Window */
+        .chat-container {
+          position: fixed;
+          bottom: 90px;
+          right: 20px;
+          width: 360px;
+          height: 480px;
+          background: #fff;
+          border-radius: 15px;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+          display: none;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .chat-header {
+          background: #0072ff;
+          color: white;
+          text-align: center;
+          padding: 14px;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        #chatbox {
+          flex: 1;
+          padding: 10px;
+          overflow-y: auto;
+          background: #f1f5f9;
+        }
+        .message { margin: 8px 0; display: flex; }
+        .message.user { justify-content: flex-end; }
+        .message.bot { justify-content: flex-start; }
+        .bubble {
+          max-width: 75%;
+          padding: 10px 14px;
+          border-radius: 18px;
+          font-size: 14px;
+          line-height: 1.4;
+        }
+        .user .bubble { background: #0072ff; color: white; border-bottom-right-radius: 5px; }
+        .bot .bubble { background: #e5e7eb; color: #111827; border-bottom-left-radius: 5px; }
+        .chat-input { display: flex; border-top: 1px solid #ddd; }
+        .chat-input input {
+          flex: 1; padding: 10px; border: none; outline: none; font-size: 14px;
+        }
+        .chat-input button {
+          padding: 10px 16px; border: none; background: #0072ff; color: white; cursor: pointer;
+        }
+        .chat-input button:hover { background: #0059cc; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <img src="{{ url_for('static', filename='images/image.png') }}" class="logo" alt="Logo">
+        <ul>
+            <li><a href="#home">Home</a></li>
+ <li><a href="{{ url_for('predict') }}">Predict</a></li>
+  <li><a href="#about">About Us</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+           
+        </ul>
+    </nav>
+
+    <!-- Hero Section with Background Video -->
+    <section id="home" class="hero">
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="{{ url_for('static', filename='videos/video2.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="hero-content">
+            <h1>Loan Approval Prediction Application</h1>
+           
+            <a href="{{ url_for('predict') }}" class="cta-button">Predict</a>
+        </div>
+    </section>
+       <!-- About Us Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>As digital loan applications increase, the need for quick and accurate decision-making systems grows.
+                 Machine learning models can be trained on historical data to predict loan approvals with high precision. 
+                 This project uses AWS services and other tools to create a real-time, automated MLOps workflow that enhances 
+                 both speed and accuracy. The system continuously integrates and updates models, ensuring they remain effective 
+                 as new data comes in. By automating the decision-making process, the platform reduces human bias, accelerates
+                  loan approvals, and improves overall efficiency.
+</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <p>We offer a wide range of services to meet your financial needs:</p>
+            <ul>
+                <li>
+                    <a href="https://branchapp.in/web/login">  <h3>Personal Loans</h3>
+                    <span>Affordable interest rates</span> </a>
+                  
+                </li>
+                <li>
+                    <a href="https://www.jansamarth.in/business-loan-pradhan-mantri-mudra-yojana-scheme">  <h3>Business Loans</h3>
+                    <span>Support for your growing business</span> </a>
+                </li>
+                <li>
+                    <a href="https://canarabank.com/net-banking">  <h3>Savings Accounts</h3>
+                    <span>Safe and secure banking</span> </a>
+                </li>
+                <li>
+                    <a href="https://www.experian.com/credit/credit-report/">  <h3>Credit Services</h3>
+                    <span>Quick and hassle-free credit assessments</span> </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+ 
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Have questions? Reach out to us and we'll get back to you as soon as possible.</p>
+            <p>Email: <a href="mailto:chinmayakumaram@gmail.com">chinmayakumaram@gmail.com</a></p>
+            <p>Phone: <a href="tel:+91 8197060977">+91 8197060977</a></p>
+            <p>Address: BIET Davangere, Karnataka, India</p>
+        </div>
+    </section>
+<!-- Floating Button -->
+<div class="chatbot-btn" id="chatbotBtn">💬</div>
+
+<!-- Chat Window -->
+<div class="chat-container" id="chatContainer">
+  <div class="chat-header">🤖 Loan Assistant</div>
+  <div id="chatbox"></div>
+  <div class="chat-input">
+    <input type="text" id="message" placeholder="Type your answer...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  let step = 0;
+  let userData = {};
+
+  const chatBtn = document.getElementById("chatbotBtn");
+  const chatContainer = document.getElementById("chatContainer");
+
+  // Toggle Chat
+  chatBtn.addEventListener("click", () => {
+    chatContainer.style.display =
+      chatContainer.style.display === "flex" ? "none" : "flex";
+    if (step === 0) autoGreeting();
+  });
+
+  function botMessage(msg) {
+    let chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML += `
+      <div class="message bot"><div class="bubble">${msg}</div></div>
+    `;
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function userMessage(msg) {
+    let chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML += `
+      <div class="message user"><div class="bubble">${msg}</div></div>
+    `;
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  // Auto Greeting
+  function autoGreeting() {
+    setTimeout(() => {
+      botMessage("Hello 👋 I’m your Loan Approval Assistant.");
+      setTimeout(() => {
+        botMessage("Let’s check your loan eligibility step by step.");
+        setTimeout(() => {
+          botMessage("First, please enter your *Annual Income* 💵:");
+        }, 800);
+      }, 800);
+    }, 500);
+  }
+
+  function calculateEligibility(data) {
+    let income = parseFloat(data.income);
+    let loan = parseFloat(data.loan);
+    let credit = parseFloat(data.credit);
+    let years = parseInt(data.years);
+
+    // Simple Rule-Based Logic
+    if (income >= 40000 && credit >= 650 && years >= 2 && loan <= income * 5) {
+      return "✅ Congratulations! Your loan is likely to be approved.";
+    } else {
+      return "❌ Sorry, your loan may not be approved. Try improving income/credit score.";
+    }
+  }
+
+  async function sendMessage() {
+    let msg = document.getElementById("message").value.trim();
+    if (!msg) return;
+
+    userMessage(msg);
+    document.getElementById("message").value = "";
+
+    if (step === 0) {
+      userData.income = msg; step++;
+      setTimeout(() => botMessage("Got it ✅ Now, enter your *Loan Amount* 🏦:"), 600);
+    } else if (step === 1) {
+      userData.loan = msg; step++;
+      setTimeout(() => botMessage("Great 👍 Now, enter your *Credit Score* 📊:"), 600);
+    } else if (step === 2) {
+      userData.credit = msg; step++;
+      setTimeout(() => botMessage("Almost done! Enter your *Years of Employment* 👔:"), 600);
+    } else if (step === 3) {
+      userData.years = msg; step++;
+      setTimeout(() => botMessage("Processing your request... ⏳"), 6);
+
+      let result = calculateEligibility(userData);
+      setTimeout(() => botMessage(`<b>Result:</b> ${result}`), 1500);
+    } else {
+      setTimeout(() => botMessage("You can refresh the page to try again 🔄"), 500);
+    }
+  }
+</script>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Loan Approval Prediction Application. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

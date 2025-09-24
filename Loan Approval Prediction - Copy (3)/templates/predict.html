@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loan Approval Prediction</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333;
+      --container-bg: #ffffff;
+      --input-bg: #f9f9f9;
+      --border-color: #ccc;
+      --primary-color: #007bff;
+    }
+
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #f5f5f5;
+      --container-bg: #1f1f1f;
+      --input-bg: #2a2a2a;
+      --border-color: #444;
+      --primary-color: #1e90ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.4s, color 0.4s;
+      
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      cursor: pointer;
+      font-size: 22px;
+      color: var(--text-color);
+      transition: color 0.3s ease;
+    }
+
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--container-bg);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      transition: background-color 0.3s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--text-color);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="number"],
+    select {
+      padding: 12px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: var(--text-color);
+      transition: border 0.3s ease, background-color 0.3s ease;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    input[type="submit"] {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      .theme-toggle {
+        right: 20px;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background-color: #0a3d62;
+      color: #fff;
+      padding: 2rem 20px;
+      text-align: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    footer p {
+      font-size: 1rem;
+      color: #ccc;
+      margin: 0;
+    }
+
+    body.dark-mode footer {
+      background-color: #1f1f1f;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle Button -->
+  <div class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Mode">
+    <i class="fas fa-moon"></i>
+  </div>
+
+  <!-- Form Section -->
+  <section class="form-container">
+    <div class="container">
+      <h2><i class="fas fa-university"></i> Loan Approval Prediction</h2>
+      <form action="/predictdata" method="post">
+        <label for="no_of_dependents"><i class="fas fa-users"></i> Number of Dependents:</label>
+        <input type="number" id="no_of_dependents" name="no_of_dependents" required>
+
+        <label for="education"><i class="fas fa-graduation-cap"></i> Education Level:</label>
+        <select id="education" name="education" required>
+          <option value="1">Graduate</option>
+          <option value="0">Not Graduate</option>
+        </select>
+
+        <label for="self_employed"><i class="fas fa-briefcase"></i> Self Employed:</label>
+        <select id="self_employed" name="self_employed" required>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+
+        <label for="income_annum"><i class="fas fa-wallet"></i> Annual Income:</label>
+        <input type="number" id="income_annum" name="income_annum" required>
+
+        <label for="loan_amount"><i class="fas fa-money-bill-wave"></i> Loan Amount:</label>
+        <input type="number" id="loan_amount" name="loan_amount" required>
+
+        <label for="loan_term"><i class="fas fa-calendar-alt"></i> Loan Term (in months):</label>
+        <input type="number" id="loan_term" name="loan_term" required>
+
+        <label for="cibil_score"><i class="fas fa-star"></i> CIBIL Score:</label>
+        <input type="number" id="cibil_score" name="cibil_score" required>
+
+        <label for="residential_assets_value"><i class="fas fa-home"></i> Residential Assets Value:</label>
+        <input type="number" id="residential_assets_value" name="residential_assets_value" required>
+
+        <label for="commercial_assets_value"><i class="fas fa-building"></i> Commercial Assets Value:</label>
+        <input type="number" id="commercial_assets_value" name="commercial_assets_value" required>
+
+        <label for="luxury_assets_value"><i class="fas fa-gem"></i> Luxury Assets Value:</label>
+        <input type="number" id="luxury_assets_value" name="luxury_assets_value" required>
+
+        <label for="bank_asset_value"><i class="fas fa-piggy-bank"></i> Bank Asset Value:</label>
+        <input type="number" id="bank_asset_value" name="bank_asset_value" required>
+
+        <input type="submit" value="Predict">
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Loan Approval Prediction Application. All rights reserved.</p>
+  </footer>
+
+  <!-- Theme Toggle Script -->
+  <script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const body = document.body;
+    const icon = toggleBtn.querySelector("i");
+
+    // Load from localStorage
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+      const isDark = body.classList.contains("dark-mode");
+
+      icon.classList.toggle("fa-moon", !isDark);
+      icon.classList.toggle("fa-sun", isDark);
+
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+  </script>
+
+</body>
+</html>
